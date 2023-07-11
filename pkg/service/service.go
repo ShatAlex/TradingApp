@@ -1,8 +1,14 @@
 package service
 
-import "github.com/ShatAlex/trading-app/pkg/repository"
+import (
+	trade "github.com/ShatAlex/trading-app"
+	"github.com/ShatAlex/trading-app/pkg/repository"
+)
 
 type Authorization interface {
+	CreateUser(user trade.User) (int, error)
+	GenerateToken(username, password string) (string, error)
+	ParseToken(token string) (int, error)
 }
 
 type Trade interface {
@@ -18,5 +24,7 @@ type Service struct {
 }
 
 func NewService(rep *repository.Repository) *Service {
-	return &Service{}
+	return &Service{
+		Authorization: NewAuthService(rep.Authorization),
+	}
 }

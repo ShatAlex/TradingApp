@@ -46,8 +46,6 @@ func main() {
 		logrus.Fatalf("error occured while running server: %s", err.Error())
 	}
 
-	logrus.Print("Trading Application Started")
-
 }
 
 func initConfig() error {

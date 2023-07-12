@@ -13,17 +13,23 @@ type Authorization interface {
 type Trade interface {
 }
 
-type Type interface {
+type TypeTrade interface {
+	Create(userId int, typeTrade trade.TypeTrade) (int, error)
+	GetAll(userId int) ([]trade.TypeTrade, error)
+	GetTypeById(userId, typeId int) (trade.TypeTrade, error)
+	Delete(userId, typeId int) error
+	Update(userId, typeId int, typeTrade trade.TypeTrade) error
 }
 
 type Repository struct {
 	Authorization
 	Trade
-	Type
+	TypeTrade
 }
 
 func NewRepository(db *sqlx.DB) *Repository {
 	return &Repository{
 		Authorization: NewAuthPostgres(db),
+		TypeTrade:     NewTypeTradePostgres(db),
 	}
 }

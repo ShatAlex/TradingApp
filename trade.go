@@ -11,5 +11,6 @@ type Trade struct {
 
 type TypeTrade struct {
 	Id         int    `json:"id"`
+	UserId     int    `json:"user_id" db:"user_id"` // db т.к. создавали без userId в Body, а без него GET не сработает
 	Trade_type string `json:"trade_type"`
 }

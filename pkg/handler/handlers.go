@@ -28,7 +28,7 @@ func (h *Handler) InitRouters() *gin.Engine {
 			trades.POST("/", h.createTrade)
 			trades.GET("/", h.getAllTrades)
 			trades.GET("/:id", h.getTradeById)
-			trades.PUT("/id", h.updateTrade)
+			trades.PUT("/:id", h.updateTrade)
 			trades.DELETE("/:id", h.deleteTrade)
 		}
 		types := api.Group("/types")

@@ -11,6 +11,11 @@ type Authorization interface {
 }
 
 type Trade interface {
+	Create(userId int, trade trade.Trade) (int, error)
+	GetAll(userId int) ([]trade.Trade, error)
+	GetTradeById(userId, tradeId int) (trade.Trade, error)
+	Delete(userId, tradeId int) error
+	Update(userId, tradeId int, trade trade.UpdateTradeInput) error
 }
 
 type TypeTrade interface {
@@ -31,5 +36,6 @@ func NewRepository(db *sqlx.DB) *Repository {
 	return &Repository{
 		Authorization: NewAuthPostgres(db),
 		TypeTrade:     NewTypeTradePostgres(db),
+		Trade:         NewTradePostgres(db),
 	}
 }

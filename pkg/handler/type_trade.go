@@ -33,7 +33,7 @@ func (h *Handler) createType(c *gin.Context) {
 	})
 }
 
-type getAllListsResponse struct {
+type getAllTypesResponse struct {
 	Data []trade.TypeTrade `json:"data"`
 }
 
@@ -51,7 +51,7 @@ func (h *Handler) getAllType(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, getAllListsResponse{
+	c.JSON(http.StatusOK, getAllTypesResponse{
 		Data: types,
 	})
 }

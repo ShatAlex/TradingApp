@@ -12,13 +12,13 @@ CREATE TABLE types
 (
     id serial not null unique,
     user_id int references users(id) on delete cascade not null,
-    trade_type varchar(255)
+    trade_type varchar(255) unique
 );
 
 CREATE TABLE trades
 (
     id serial not null unique,
-    figi varchar(255) not null,
+    figi varchar(255) not null unique,
     user_id int references users(id) on delete cascade not null,
     type_id int references types(id) on delete cascade not null,
     price int,

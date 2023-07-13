@@ -12,6 +12,11 @@ type Authorization interface {
 }
 
 type Trade interface {
+	Create(userId int, trade trade.Trade) (int, error)
+	GetAll(userId int) ([]trade.Trade, error)
+	GetTradeById(userId, tradeId int) (trade.Trade, error)
+	Delete(userId, tradeId int) error
+	Update(userId, tradeId int, trade trade.UpdateTradeInput) error
 }
 
 type TypeTrade interface {
@@ -32,5 +37,6 @@ func NewService(rep *repository.Repository) *Service {
 	return &Service{
 		Authorization: NewAuthService(rep.Authorization),
 		TypeTrade:     NewTypeTradeService(rep.TypeTrade),
+		Trade:         NewTradeService(rep.Trade, rep.TypeTrade),
 	}
 }

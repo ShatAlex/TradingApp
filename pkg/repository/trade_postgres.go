@@ -22,7 +22,7 @@ func (r *TradePostgres) Create(userId int, trade trade.Trade) (int, error) {
 	createTrade := fmt.Sprintf(`INSERT INTO %s (figi, user_id, type_id, price, amount) SELECT $1, $2, $3, $4, $5
 								WHERE (SELECT true FROM %s ty WHERE ty.user_id = $6 AND ty.id = $7) 
 								RETURNING id`, tradesTable, typesTable)
-	row := r.db.QueryRow(createTrade, trade.Figi, userId, trade.Type_id, trade.Price, trade.Amount, userId, trade.Type_id)
+	row := r.db.QueryRow(createTrade, trade.Ticker, userId, trade.Type_id, trade.Price, trade.Amount, userId, trade.Type_id)
 
 	err := row.Scan(&tradeId)
 	if err != nil {
@@ -66,9 +66,9 @@ func (r *TradePostgres) Update(userId, tradeId int, trade trade.UpdateTradeInput
 	argId := 1
 	query := ""
 
-	if trade.Figi != nil {
-		setValues = append(setValues, fmt.Sprintf("figi=$%d", argId))
-		args = append(args, trade.Figi)
+	if trade.Ticker != nil {
+		setValues = append(setValues, fmt.Sprintf("ticker=$%d", argId))
+		args = append(args, trade.Ticker)
 		argId++
 	}
 

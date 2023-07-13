@@ -4,7 +4,7 @@ import "errors"
 
 type Trade struct {
 	Id      int    `json:"id" db:"id"`
-	Figi    string `json:"figi" db:"figi"`
+	Ticker  string `json:"ticker" db:"ticker"`
 	User_id int    `json:"user_id" db:"user_id"`
 	Type_id int    `json:"type_id" db:"type_id"`
 	Price   int    `json:"price" db:"price"`
@@ -18,15 +18,19 @@ type TypeTrade struct {
 }
 
 type UpdateTradeInput struct {
-	Figi    *string `json:"figi"`
+	Ticker  *string `json:"ticker"`
 	Type_id *int    `json:"type_id"`
 	Price   *int    `json:"price"`
 	Amount  *int    `json:"amount"`
 }
 
 func (i UpdateTradeInput) Validate() error {
-	if i.Figi == nil && i.Price == nil && i.Type_id == nil && i.Amount == nil {
+	if i.Ticker == nil && i.Price == nil && i.Type_id == nil && i.Amount == nil {
 		return errors.New("update structure has no values")
 	}
 	return nil
+}
+
+type PolygonInput struct {
+	Ticker *string `json:"ticker"`
 }

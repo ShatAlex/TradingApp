@@ -18,7 +18,7 @@ CREATE TABLE types
 CREATE TABLE trades
 (
     id serial not null unique,
-    figi varchar(255) not null unique,
+    ticker varchar(255) not null unique,
     user_id int references users(id) on delete cascade not null,
     type_id int references types(id) on delete cascade not null,
     price int,

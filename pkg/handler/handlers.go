@@ -23,6 +23,10 @@ func (h *Handler) InitRouters() *gin.Engine {
 	}
 	api := router.Group("/api/v1", h.userIdentity)
 	{
+		treasuries := api.Group("/treasuries")
+		{
+			treasuries.POST("/", h.getTreasuries)
+		}
 		trades := api.Group("/trades")
 		{
 			trades.POST("/", h.createTrade)

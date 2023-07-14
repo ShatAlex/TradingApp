@@ -36,3 +36,15 @@ func (s *TradeService) Update(userId, tradeId int, trade trade.UpdateTradeInput)
 	}
 	return s.repTrade.Update(userId, tradeId, trade)
 }
+
+func (s *TradeService) BuyTicker(userId int, input trade.BuySellTickerInput, price float64) (int, error) {
+	return s.repTrade.BuyTicker(userId, input, price)
+}
+
+func (s *TradeService) SellTicker(userId int, input trade.BuySellTickerInput, price float64) (int, error) {
+	return s.repTrade.SellTicker(userId, input, price)
+}
+
+func (s *TradeService) GetAllTickers(userId int) ([]trade.Portfolio, error) {
+	return s.repTrade.GetAllTickers(userId)
+}

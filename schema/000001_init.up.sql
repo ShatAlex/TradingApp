@@ -18,9 +18,17 @@ CREATE TABLE types
 CREATE TABLE trades
 (
     id serial not null unique,
-    ticker varchar(255) not null unique,
+    ticker varchar(255) not null,
     user_id int references users(id) on delete cascade not null,
     type_id int references types(id) on delete cascade not null,
-    price int,
+    price float,
     amount int
+);
+
+CREATE TABLE portfolio
+(
+    id serial not null unique,
+    ticker varchar(255) not null,
+    user_id int references users(id) on delete cascade not null,
+    count int not null
 );

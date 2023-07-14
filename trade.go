@@ -3,12 +3,12 @@ package trade
 import "errors"
 
 type Trade struct {
-	Id      int    `json:"id" db:"id"`
-	Ticker  string `json:"ticker" db:"ticker"`
-	User_id int    `json:"user_id" db:"user_id"`
-	Type_id int    `json:"type_id" db:"type_id"`
-	Price   int    `json:"price" db:"price"`
-	Amount  int    `json:"amount" db:"amount"`
+	Id     int     `json:"id" db:"id"`
+	Ticker string  `json:"ticker" db:"ticker"`
+	UserId int     `json:"user_id" db:"user_id"`
+	TypeId int     `json:"type_id" db:"type_id"`
+	Price  float64 `json:"price" db:"price"`
+	Amount int     `json:"amount" db:"amount"`
 }
 
 type TypeTrade struct {
@@ -17,15 +17,22 @@ type TypeTrade struct {
 	Trade_type string `json:"trade_type"`
 }
 
+type Portfolio struct {
+	Id     int    `json:"id"`
+	Userid int    `json:"user_id" db:"user_id"`
+	Ticker string `json:"ticker"`
+	Count  int    `json:"count"`
+}
+
 type UpdateTradeInput struct {
-	Ticker  *string `json:"ticker"`
-	Type_id *int    `json:"type_id"`
-	Price   *int    `json:"price"`
-	Amount  *int    `json:"amount"`
+	Ticker *string  `json:"ticker"`
+	Typeid *int     `json:"type_id" db:"type_id"`
+	Price  *float64 `json:"price"`
+	Amount *int     `json:"amount"`
 }
 
 func (i UpdateTradeInput) Validate() error {
-	if i.Ticker == nil && i.Price == nil && i.Type_id == nil && i.Amount == nil {
+	if i.Ticker == nil && i.Price == nil && i.Typeid == nil && i.Amount == nil {
 		return errors.New("update structure has no values")
 	}
 	return nil
@@ -33,4 +40,9 @@ func (i UpdateTradeInput) Validate() error {
 
 type PolygonInput struct {
 	Ticker *string `json:"ticker"`
+}
+
+type BuySellTickerInput struct {
+	Ticker *string `json:"ticker"`
+	Amount *int    `json:"amount"`
 }

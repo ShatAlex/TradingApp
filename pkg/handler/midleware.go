@@ -1,11 +1,14 @@
 package handler
 
 import (
+	"context"
 	"errors"
 	"net/http"
 	"strings"
 
 	"github.com/gin-gonic/gin"
+	polygon "github.com/polygon-io/client-go/rest"
+	"github.com/polygon-io/client-go/rest/models"
 )
 
 const (
@@ -47,4 +50,20 @@ func getUserId(c *gin.Context) (int, error) {
 	}
 
 	return idInt, nil
+}
+
+func getTreasuries(c *gin.Context, ticker *string) ([]models.Agg, error) {
+
+	pol := polygon.New("4Sag3Fh4lQIYMt6P219ziTdI_nT1Pnec")
+
+	params := models.GetPreviousCloseAggParams{
+		Ticker: *ticker,
+	}
+
+	res, err := pol.GetPreviousCloseAgg(context.Background(), &params)
+	if err != nil {
+		return res.Results, errors.New("bad request")
+	}
+
+	return res.Results, nil
 }

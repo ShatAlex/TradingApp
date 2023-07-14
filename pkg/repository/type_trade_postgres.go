@@ -16,11 +16,11 @@ func NewTypeTradePostgres(db *sqlx.DB) *TypeTradePostgres {
 	return &TypeTradePostgres{db: db}
 }
 
-func (r *TypeTradePostgres) Create(userId int, typeTrade trade.TypeTrade) (int, error) {
+func (r *TypeTradePostgres) Create(userId int, input trade.TypeTrade) (int, error) {
 	var typeId int
 
 	createTypeTrade := fmt.Sprintf("INSERT INTO %s (user_id, trade_type) VALUES ($1, $2) RETURNING id", typesTable)
-	row := r.db.QueryRow(createTypeTrade, userId, typeTrade.Trade_type)
+	row := r.db.QueryRow(createTypeTrade, userId, input.Trade_type)
 
 	err := row.Scan(&typeId)
 	if err != nil {
@@ -54,21 +54,21 @@ func (r *TypeTradePostgres) GetTypeById(userId, typeId int) (trade.TypeTrade, er
 
 func (r *TypeTradePostgres) Delete(userId, typeId int) error {
 	quary := fmt.Sprintf("DELETE FROM %s WHERE user_id = $1 and id = $2", typesTable)
-	_, err := r.db.Exec(quary, userId, typeId)
 	_, newErr := r.GetTypeById(userId, typeId)
 	if newErr != nil {
 		return errors.New("persmissions denied")
 	}
+	_, err := r.db.Exec(quary, userId, typeId)
 	return err
 }
 
-func (r *TypeTradePostgres) Update(userId, typeId int, typeTrade trade.TypeTrade) error {
+func (r *TypeTradePostgres) Update(userId, typeId int, input trade.TypeTrade) error {
 	quary := fmt.Sprintf("UPDATE %s SET trade_type = $1 WHERE user_id = $2 and id = $3", typesTable)
-	_, err := r.db.Exec(quary, typeTrade.Trade_type, userId, typeId)
 	_, newErr := r.GetTypeById(userId, typeId)
 	if newErr != nil {
 		return errors.New("persmissions denied")
 	}
+	_, err := r.db.Exec(quary, input.Trade_type, userId, typeId)
 	return err
 
 }

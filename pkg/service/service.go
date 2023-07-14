@@ -17,6 +17,9 @@ type Trade interface {
 	GetTradeById(userId, tradeId int) (trade.Trade, error)
 	Delete(userId, tradeId int) error
 	Update(userId, tradeId int, trade trade.UpdateTradeInput) error
+	BuyTicker(userId int, input trade.BuySellTickerInput, price float64) (int, error)
+	SellTicker(userId int, input trade.BuySellTickerInput, price float64) (int, error)
+	GetAllTickers(userId int) ([]trade.Portfolio, error)
 }
 
 type TypeTrade interface {

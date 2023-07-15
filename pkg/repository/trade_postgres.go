@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"errors"
 	"fmt"
 	"strings"
 
@@ -21,11 +22,6 @@ func (r *TradePostgres) Create(userId int, trade trade.Trade) (int, error) {
 	var tradeId int
 	var buyId, sellId int
 
-	tx, err := r.db.Begin()
-	if err != nil {
-		return 0, err
-	}
-
 	select_type := fmt.Sprintf("SELECT id FROM %s WHERE trade_type = 'Покупка ценных бумаг'", typesTable)
 	if err := r.db.Get(&buyId, select_type); err != nil {
 		return 0, err
@@ -36,27 +32,25 @@ func (r *TradePostgres) Create(userId int, trade trade.Trade) (int, error) {
 		return 0, err
 	}
 
+	if buyId == trade.TypeId {
+		return 0, errors.New("bad request. Try /api/v1/portfolio/buy")
+	}
+
+	if sellId == trade.TypeId {
+		return 0, errors.New("bad request. Try /api/v1/portfolio/sell")
+	}
+
 	createTrade := fmt.Sprintf(`INSERT INTO %s (ticker, user_id, type_id, price, amount) SELECT $1, $2, $3, $4, $5
 								WHERE (SELECT true FROM %s ty WHERE ty.user_id = $6 AND ty.id = $7)
 								RETURNING id`, tradesTable, typesTable)
 	row := r.db.QueryRow(createTrade, trade.Ticker, userId, trade.TypeId, trade.Price, trade.Amount, userId, trade.TypeId)
 
-	err = row.Scan(&tradeId)
+	err := row.Scan(&tradeId)
 	if err != nil {
-		tx.Rollback()
 		return 0, err
 	}
 
-	if trade.TypeId == buyId || trade.TypeId == sellId {
-		addToPortfolio := fmt.Sprintf("INSERT INTO %s (user_id, ticker, amount) VALUES ($1, $2, $3)", portfolioTable)
-		_, err = r.db.Exec(addToPortfolio, userId, trade.Ticker, trade.Amount)
-		if err != nil {
-			tx.Rollback()
-			return 0, err
-		}
-	}
-
-	return tradeId, tx.Commit()
+	return tradeId, nil
 }
 
 func (r *TradePostgres) GetAll(userId int) ([]trade.Trade, error) {

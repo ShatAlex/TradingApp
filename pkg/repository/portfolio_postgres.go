@@ -68,9 +68,16 @@ func (r *PortfolioPostgres) BuyTicker(userId int, input trade.BuySellTickerInput
 
 func (r *PortfolioPostgres) SellTicker(userId int, input trade.BuySellTickerInput, price float64, count int) (float64, error) {
 	var total float64
+	var typeId int
 
 	tx, err := r.db.Begin()
 	if err != nil {
+		return 0, err
+	}
+
+	select_type := fmt.Sprintf("SELECT id FROM %s WHERE trade_type = 'Продажа ценных бумаг'", typesTable)
+	if err := r.db.Get(&typeId, select_type); err != nil {
+		tx.Rollback()
 		return 0, err
 	}
 
@@ -91,6 +98,14 @@ func (r *PortfolioPostgres) SellTicker(userId int, input trade.BuySellTickerInpu
 			tx.Rollback()
 			return 0, err
 		}
+	}
+
+	createTrade := fmt.Sprintf(`INSERT INTO %s (ticker, user_id, type_id, price, amount) 
+								VALUES ($1, $2, $3, $4, $5) RETURNING id`, tradesTable)
+	_, err = r.db.Exec(createTrade, input.Ticker, userId, typeId, price, input.Amount)
+	if err != nil {
+		tx.Rollback()
+		return 0, err
 	}
 
 	total = float64(*input.Amount) * price

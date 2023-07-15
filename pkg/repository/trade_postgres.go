@@ -1,7 +1,6 @@
 package repository
 
 import (
-	"database/sql"
 	"fmt"
 	"strings"
 
@@ -49,7 +48,7 @@ func (r *TradePostgres) Create(userId int, trade trade.Trade) (int, error) {
 	}
 
 	if trade.TypeId == buyId || trade.TypeId == sellId {
-		addToPortfolio := fmt.Sprintf("INSERT INTO %s (user_id, ticker, count) VALUES ($1, $2, $3)", portfolioTable)
+		addToPortfolio := fmt.Sprintf("INSERT INTO %s (user_id, ticker, amount) VALUES ($1, $2, $3)", portfolioTable)
 		_, err = r.db.Exec(addToPortfolio, userId, trade.Ticker, trade.Amount)
 		if err != nil {
 			tx.Rollback()
@@ -131,83 +130,4 @@ func (r *TradePostgres) Update(userId, tradeId int, trade trade.UpdateTradeInput
 	_, err := r.db.Exec(query, args...)
 
 	return err
-}
-
-func (r *TradePostgres) BuyTicker(userId int, input trade.BuySellTickerInput, price float64) (int, error) {
-	var exist sql.Result
-	tx, err := r.db.Begin()
-	if err != nil {
-		return 0, err
-	}
-
-	var tradeId, type_id int
-
-	select_type := fmt.Sprintf("SELECT id FROM %s WHERE trade_type = 'Покупка ценных бумаг'", typesTable)
-	if err := r.db.Get(&type_id, select_type); err != nil {
-		return 0, err
-	}
-
-	exists := fmt.Sprintf("SELECT 1 FROM %s WHERE user_id = $1 AND ticker = $2", portfolioTable)
-	if exist, err = r.db.Exec(exists, userId, input.Ticker); err != nil {
-		return 0, err
-	}
-
-	if exist == nil {
-		addToPortfolio := fmt.Sprintf("INSERT INTO %s (user_id, ticker, count) VALUES ($1, $2, $3)", portfolioTable)
-		_, err = r.db.Exec(addToPortfolio, userId, input.Ticker, input.Amount)
-		if err != nil {
-			tx.Rollback()
-			return 0, err
-		}
-	} else {
-		var count *int
-		exists := fmt.Sprintf("SELECT count FROM %s WHERE user_id = $1 AND ticker = $2", portfolioTable)
-		if err = r.db.Get(&count, exists, userId, input.Ticker); err != nil {
-			return 0, err
-		}
-
-		countInt := *count
-		amountInt := *input.Amount
-		updateToPortfolio := fmt.Sprintf("UPDATE %s SET count = $1 WHERE user_id = $2 AND ticker = $3", portfolioTable)
-		_, err = r.db.Exec(updateToPortfolio, amountInt+countInt, userId, input.Ticker)
-		if err != nil {
-			tx.Rollback()
-			return 0, err
-		}
-	}
-
-	createTrade := fmt.Sprintf(`INSERT INTO %s (ticker, user_id, type_id, price, amount) 
-								VALUES ($1, $2, $3, $4, $5) RETURNING id`, tradesTable)
-	row := r.db.QueryRow(createTrade, input.Ticker, userId, type_id, price, input.Amount)
-
-	err = row.Scan(&tradeId)
-	if err != nil {
-		tx.Rollback()
-		return 0, err
-	}
-
-	return type_id, tx.Commit()
-}
-
-func (r *TradePostgres) SellTicker(userId int, input trade.BuySellTickerInput, price float64) (int, error) {
-	// var total int
-	var sellId int
-
-	select_type := fmt.Sprintf("SELECT id FROM %s WHERE trade_type = 'Продажа ценных бумаг'", typesTable)
-	if err := r.db.Get(&sellId, select_type); err != nil {
-		return 0, err
-	}
-
-	return 0, nil
-
-}
-
-func (r *TradePostgres) GetAllTickers(userId int) ([]trade.Portfolio, error) {
-	var tickers []trade.Portfolio
-
-	quary := fmt.Sprintf("SELECT * from %s WHERE user_id = $1", portfolioTable)
-
-	err := r.db.Select(&tickers, quary, userId)
-
-	return tickers, err
 }

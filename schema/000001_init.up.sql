@@ -30,5 +30,5 @@ CREATE TABLE portfolio
     id serial not null unique,
     ticker varchar(255) not null,
     user_id int references users(id) on delete cascade not null,
-    count int not null
+    amount int not null
 );

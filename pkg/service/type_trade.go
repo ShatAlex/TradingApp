@@ -6,11 +6,12 @@ import (
 )
 
 type TypeTradeService struct {
-	repType repository.TypeTrade
+	repType      repository.TypeTrade
+	repPortfolio repository.Portfolio
 }
 
-func NewTypeTradeService(repType repository.TypeTrade) *TypeTradeService {
-	return &TypeTradeService{repType: repType}
+func NewTypeTradeService(repType repository.TypeTrade, repPortfolio repository.Portfolio) *TypeTradeService {
+	return &TypeTradeService{repType: repType, repPortfolio: repPortfolio}
 }
 
 func (s *TypeTradeService) Create(userId int, typeTrade trade.TypeTrade) (int, error) {

@@ -8,10 +8,11 @@ import (
 type TradeService struct {
 	repTrade     repository.Trade
 	repTypeTrade repository.TypeTrade
+	repPortfolio repository.Portfolio
 }
 
-func NewTradeService(repTrade repository.Trade, repTypeTrade repository.TypeTrade) *TradeService {
-	return &TradeService{repTrade: repTrade, repTypeTrade: repTypeTrade}
+func NewTradeService(repTrade repository.Trade, repTypeTrade repository.TypeTrade, repPortfolio repository.Portfolio) *TradeService {
+	return &TradeService{repTrade: repTrade, repTypeTrade: repTypeTrade, repPortfolio: repPortfolio}
 }
 
 func (s *TradeService) Create(userId int, trade trade.Trade) (int, error) {
@@ -35,16 +36,4 @@ func (s *TradeService) Update(userId, tradeId int, trade trade.UpdateTradeInput)
 		return err
 	}
 	return s.repTrade.Update(userId, tradeId, trade)
-}
-
-func (s *TradeService) BuyTicker(userId int, input trade.BuySellTickerInput, price float64) (int, error) {
-	return s.repTrade.BuyTicker(userId, input, price)
-}
-
-func (s *TradeService) SellTicker(userId int, input trade.BuySellTickerInput, price float64) (int, error) {
-	return s.repTrade.SellTicker(userId, input, price)
-}
-
-func (s *TradeService) GetAllTickers(userId int) ([]trade.Portfolio, error) {
-	return s.repTrade.GetAllTickers(userId)
 }

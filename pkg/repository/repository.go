@@ -16,9 +16,6 @@ type Trade interface {
 	GetTradeById(userId, tradeId int) (trade.Trade, error)
 	Delete(userId, tradeId int) error
 	Update(userId, tradeId int, trade trade.UpdateTradeInput) error
-	BuyTicker(userId int, input trade.BuySellTickerInput, price float64) (int, error)
-	SellTicker(userId int, input trade.BuySellTickerInput, price float64) (int, error)
-	GetAllTickers(userId int) ([]trade.Portfolio, error)
 }
 
 type TypeTrade interface {
@@ -29,16 +26,25 @@ type TypeTrade interface {
 	Update(userId, typeId int, typeTrade trade.TypeTrade) error
 }
 
+type Portfolio interface {
+	BuyTicker(userId int, input trade.BuySellTickerInput, price float64) (int, error)
+	SellTicker(userId int, input trade.BuySellTickerInput, price float64, count int) (float64, error)
+	GetAllTickers(userId int) ([]trade.Portfolio, error)
+	GetTickerByNasdaq(userId int, nasdaq string) (trade.Portfolio, error)
+}
+
 type Repository struct {
 	Authorization
 	Trade
 	TypeTrade
+	Portfolio
 }
 
 func NewRepository(db *sqlx.DB) *Repository {
 	return &Repository{
 		Authorization: NewAuthPostgres(db),
-		TypeTrade:     NewTypeTradePostgres(db),
 		Trade:         NewTradePostgres(db),
+		TypeTrade:     NewTypeTradePostgres(db),
+		Portfolio:     NewPortfolioPostgres(db),
 	}
 }

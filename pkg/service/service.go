@@ -17,9 +17,6 @@ type Trade interface {
 	GetTradeById(userId, tradeId int) (trade.Trade, error)
 	Delete(userId, tradeId int) error
 	Update(userId, tradeId int, trade trade.UpdateTradeInput) error
-	BuyTicker(userId int, input trade.BuySellTickerInput, price float64) (int, error)
-	SellTicker(userId int, input trade.BuySellTickerInput, price float64) (int, error)
-	GetAllTickers(userId int) ([]trade.Portfolio, error)
 }
 
 type TypeTrade interface {
@@ -30,16 +27,25 @@ type TypeTrade interface {
 	Update(userId, typeId int, typeTrade trade.TypeTrade) error
 }
 
+type Portfolio interface {
+	BuyTicker(userId int, input trade.BuySellTickerInput, price float64) (int, error)
+	SellTicker(userId int, input trade.BuySellTickerInput, price float64) (float64, error)
+	GetAllTickers(userId int) ([]trade.Portfolio, error)
+	GetTickerByNasdaq(userId int, nasdaq string) (trade.Portfolio, error)
+}
+
 type Service struct {
 	Authorization
 	Trade
 	TypeTrade
+	Portfolio
 }
 
 func NewService(rep *repository.Repository) *Service {
 	return &Service{
 		Authorization: NewAuthService(rep.Authorization),
-		TypeTrade:     NewTypeTradeService(rep.TypeTrade),
-		Trade:         NewTradeService(rep.Trade, rep.TypeTrade),
+		Trade:         NewTradeService(rep.Trade, rep.TypeTrade, rep.Portfolio),
+		TypeTrade:     NewTypeTradeService(rep.TypeTrade, rep.Portfolio),
+		Portfolio:     NewPortfolioService(rep.Portfolio),
 	}
 }

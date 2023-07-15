@@ -17,13 +17,6 @@ type TypeTrade struct {
 	Trade_type string `json:"trade_type"`
 }
 
-type Portfolio struct {
-	Id     int    `json:"id"`
-	Userid int    `json:"user_id" db:"user_id"`
-	Ticker string `json:"ticker"`
-	Count  int    `json:"count"`
-}
-
 type UpdateTradeInput struct {
 	Ticker *string  `json:"ticker"`
 	Typeid *int     `json:"type_id" db:"type_id"`
@@ -40,9 +33,4 @@ func (i UpdateTradeInput) Validate() error {
 
 type PolygonInput struct {
 	Ticker *string `json:"ticker"`
-}
-
-type BuySellTickerInput struct {
-	Ticker *string `json:"ticker"`
-	Amount *int    `json:"amount"`
 }

@@ -1,8 +1,11 @@
 package handler
 
 import (
+	_ "github.com/ShatAlex/trading-app/docs"
 	"github.com/ShatAlex/trading-app/pkg/service"
 	"github.com/gin-gonic/gin"
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
 type Handler struct {
@@ -15,6 +18,8 @@ func NewHandler(ser *service.Service) *Handler {
 
 func (h *Handler) InitRouters() *gin.Engine {
 	router := gin.New()
+
+	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	auth := router.Group("/auth")
 	{
@@ -41,6 +46,7 @@ func (h *Handler) InitRouters() *gin.Engine {
 			portfolio.POST("/sell", h.sellTicker)
 			portfolio.GET("/", h.getPortfolio)
 			portfolio.GET("/detail", h.getSpecificTicker)
+			portfolio.GET("/income", h.getIncome)
 		}
 		types := api.Group("/types")
 		{

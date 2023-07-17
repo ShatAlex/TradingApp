@@ -7,6 +7,19 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// @Summary Buy ticker
+// @Security ApiKeyAuth
+// @Tags Portfolio
+// @Description buy ticker
+// @ID buy-ticker
+// @Accept  json
+// @Produce  json
+// @Param input body trade.BuySellTickerInput true "ticker fields"
+// @Success 200 {integer} integer 1
+// @Failure 400,404 {object} errorResponse
+// @Failure 500 {object} errorResponse
+// @Failure default {object} errorResponse
+// @Router /api/v1/portfolio/buy [post]
 func (h *Handler) buyTicker(c *gin.Context) {
 
 	userId, err := getUserId(c)
@@ -43,6 +56,19 @@ func (h *Handler) buyTicker(c *gin.Context) {
 	})
 }
 
+// @Summary Sell ticker
+// @Security ApiKeyAuth
+// @Tags Portfolio
+// @Description sell ticker
+// @ID sell-ticker
+// @Accept  json
+// @Produce  json
+// @Param input body trade.BuySellTickerInput true "ticker fields"
+// @Success 200 {integer} integer 1
+// @Failure 400,404 {object} errorResponse
+// @Failure 500 {object} errorResponse
+// @Failure default {object} errorResponse
+// @Router /api/v1/portfolio/sell [post]
 func (h *Handler) sellTicker(c *gin.Context) {
 	userId, err := getUserId(c)
 	if err != nil {
@@ -78,6 +104,18 @@ func (h *Handler) sellTicker(c *gin.Context) {
 	})
 }
 
+// @Summary Get portfolio
+// @Security ApiKeyAuth
+// @Tags Portfolio
+// @Description get portfolio
+// @ID get-portfolio
+// @Accept  json
+// @Produce  json
+// @Success 200 {integer} integer 1
+// @Failure 400,404 {object} errorResponse
+// @Failure 500 {object} errorResponse
+// @Failure default {object} errorResponse
+// @Router /api/v1/portfolio [get]
 func (h *Handler) getPortfolio(c *gin.Context) {
 	userId, err := getUserId(c)
 	if err != nil {
@@ -93,6 +131,19 @@ func (h *Handler) getPortfolio(c *gin.Context) {
 	c.JSON(http.StatusOK, tickers)
 }
 
+// @Summary Get specific ticker
+// @Security ApiKeyAuth
+// @Tags Portfolio
+// @Description get specific ticker
+// @ID get-cpecific-tciker
+// @Accept  json
+// @Produce  json
+// @Param ticker path string true "Ticker NASDAQ"
+// @Success 200 {integer} integer 1
+// @Failure 400,404 {object} errorResponse
+// @Failure 500 {object} errorResponse
+// @Failure default {object} errorResponse
+// @Router /api/v1/portfolio/detail?ticker={ticker} [get]
 func (h *Handler) getSpecificTicker(c *gin.Context) {
 	userId, err := getUserId(c)
 	if err != nil {
@@ -108,4 +159,47 @@ func (h *Handler) getSpecificTicker(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, ticker)
+}
+
+// @Summary Get income
+// @Security ApiKeyAuth
+// @Tags Portfolio
+// @Description get income
+// @ID get-income
+// @Accept  json
+// @Produce  json
+// @Success 200 {integer} integer 1
+// @Failure 400,404 {object} errorResponse
+// @Failure 500 {object} errorResponse
+// @Failure default {object} errorResponse
+// @Router /api/v1/portfolio/income [get]
+func (h *Handler) getIncome(c *gin.Context) {
+
+	var total float64
+
+	userId, err := getUserId(c)
+	if err != nil {
+		return
+	}
+
+	portfolio, err := h.services.Portfolio.GetAllTickers(userId)
+	if err != nil {
+		newErrorResponse(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	for _, elem := range portfolio {
+		ticker, err := getTreasuries(c, &elem.Ticker)
+		if err != nil {
+			newErrorResponse(c, http.StatusBadRequest, err.Error())
+			return
+		}
+
+		total += ticker[0].Close * float64(elem.Amount)
+	}
+
+	c.JSON(http.StatusOK, map[string]interface{}{
+		"total_income": total,
+	})
+
 }

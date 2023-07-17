@@ -31,6 +31,9 @@ func NewAuthService(rep repository.Authorization) *AuthService {
 }
 
 func (s *AuthService) CreateUser(user trade.User) (int, error) {
+	if err := user.SuperUserValidate(); err != nil {
+		return 0, err
+	}
 	user.Password = generatePasswordHash(user.Password)
 	return s.rep.CreateUser(user)
 }

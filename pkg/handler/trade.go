@@ -8,6 +8,19 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// @Summary Create trade
+// @Security ApiKeyAuth
+// @Tags Trades
+// @Description create trade
+// @ID create-trade
+// @Accept  json
+// @Produce  json
+// @Param input body trade.Trade true "trade fields"
+// @Success 200 {integer} integer 1
+// @Failure 400,404 {object} errorResponse
+// @Failure 500 {object} errorResponse
+// @Failure default {object} errorResponse
+// @Router /api/v1/trades [post]
 func (h *Handler) createTrade(c *gin.Context) {
 
 	userId, err := getUserId(c)
@@ -37,6 +50,18 @@ type getAllTradesResponse struct {
 	Data []trade.Trade `json:"data"`
 }
 
+// @Summary Get trades
+// @Security ApiKeyAuth
+// @Tags Trades
+// @Description get all trades
+// @ID get-trades
+// @Accept  json
+// @Produce  json
+// @Success 200 {integer} integer 1
+// @Failure 400,404 {object} errorResponse
+// @Failure 500 {object} errorResponse
+// @Failure default {object} errorResponse
+// @Router /api/v1/trades [get]
 func (h *Handler) getAllTrades(c *gin.Context) {
 	userId, err := getUserId(c)
 	if err != nil {
@@ -55,6 +80,19 @@ func (h *Handler) getAllTrades(c *gin.Context) {
 	})
 }
 
+// @Summary Get specific trade
+// @Security ApiKeyAuth
+// @Tags Trades
+// @Description get specific trade
+// @ID get-specific-trade
+// @Accept  json
+// @Produce  json
+// @Param id path int true "Trade ID"
+// @Success 200 {integer} integer 1
+// @Failure 400,404 {object} errorResponse
+// @Failure 500 {object} errorResponse
+// @Failure default {object} errorResponse
+// @Router /api/v1/trades/{id} [get]
 func (h *Handler) getTradeById(c *gin.Context) {
 	userId, err := getUserId(c)
 	if err != nil {
@@ -76,6 +114,20 @@ func (h *Handler) getTradeById(c *gin.Context) {
 	c.JSON(http.StatusOK, item)
 }
 
+// @Summary Update trade
+// @Security ApiKeyAuth
+// @Tags Trades
+// @Description update trade
+// @ID update-trade
+// @Accept  json
+// @Produce  json
+// @Param input body trade.Trade true "trade fields"
+// @Param id path int true "Trade ID"
+// @Success 200 {integer} integer 1
+// @Failure 400,404 {object} errorResponse
+// @Failure 500 {object} errorResponse
+// @Failure default {object} errorResponse
+// @Router /api/v1/trades/{id} [put]
 func (h *Handler) updateTrade(c *gin.Context) {
 	userId, err := getUserId(c)
 	if err != nil {
@@ -104,6 +156,19 @@ func (h *Handler) updateTrade(c *gin.Context) {
 	})
 }
 
+// @Summary Delete trade
+// @Security ApiKeyAuth
+// @Tags Trades
+// @Description delete trade
+// @ID delete-trade
+// @Accept  json
+// @Produce  json
+// @Param id path int true "Trade ID"
+// @Success 200 {integer} integer 1
+// @Failure 400,404 {object} errorResponse
+// @Failure 500 {object} errorResponse
+// @Failure default {object} errorResponse
+// @Router /api/v1/trades/{id} [delete]
 func (h *Handler) deleteTrade(c *gin.Context) {
 	userId, err := getUserId(c)
 	if err != nil {

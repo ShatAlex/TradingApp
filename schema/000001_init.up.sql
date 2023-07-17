@@ -5,13 +5,12 @@ CREATE TABLE users
     username varchar(255) not null unique,
     password_hash varchar(255) not null,
     balance int default 0,
-    trading_status varchar(255) default 'beginner'
+    is_superuser boolean default false
 );
 
 CREATE TABLE types
 (
     id serial not null unique,
-    user_id int references users(id) on delete cascade not null,
     trade_type varchar(255) unique
 );
 

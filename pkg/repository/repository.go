@@ -19,11 +19,12 @@ type Trade interface {
 }
 
 type TypeTrade interface {
-	Create(userId int, typeTrade trade.TypeTrade) (int, error)
-	GetAll(userId int) ([]trade.TypeTrade, error)
-	GetTypeById(userId, typeId int) (trade.TypeTrade, error)
-	Delete(userId, typeId int) error
-	Update(userId, typeId int, typeTrade trade.TypeTrade) error
+	Create(typeTrade trade.TypeTrade) (int, error)
+	GetAll() ([]trade.TypeTrade, error)
+	GetTypeById(typeId int) (trade.TypeTrade, error)
+	Delete(typeId int) error
+	Update(typeId int, typeTrade trade.TypeTrade) error
+	SuperUserValidate(userId int) (bool, error)
 }
 
 type Portfolio interface {

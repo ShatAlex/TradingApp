@@ -4,7 +4,6 @@ CREATE TABLE users
     name varchar(255) not null,
     username varchar(255) not null unique,
     password_hash varchar(255) not null,
-    balance int default 0,
     is_superuser boolean default false
 );
 
@@ -13,6 +12,10 @@ CREATE TABLE types
     id serial not null unique,
     trade_type varchar(255) unique
 );
+
+INSERT INTO types (trade_type) VALUES ('Покупка ценных бумаг');
+
+INSERT INTO types (trade_type) VALUES ('Продажа ценных бумаг');
 
 CREATE TABLE trades
 (

@@ -15,7 +15,7 @@ import (
 // @ID create-type
 // @Accept  json
 // @Produce  json
-// @Param input body trade.TypeTrade true "type fields"
+// @Param input body trade.SwaggerTypeTrade true "type fields"
 // @Success 200 {integer} integer 1
 // @Failure 400,404 {object} errorResponse
 // @Failure 500 {object} errorResponse
@@ -114,7 +114,7 @@ func (h *Handler) getTypeById(c *gin.Context) {
 // @Accept  json
 // @Produce  json
 // @Param id path int true "Type ID"
-// @Param input body trade.UpdateTradeInput true "type fildes"
+// @Param input body trade.TypeTrade true "type fildes"
 // @Success 200 {integer} integer 1
 // @Failure 400,404 {object} errorResponse
 // @Failure 500 {object} errorResponse

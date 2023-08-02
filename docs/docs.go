@@ -133,7 +133,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/v1/portfolio/detail{ticker}": {
+        "/api/v1/portfolio/detail/{ticker}": {
             "get": {
                 "security": [
                     {
@@ -389,7 +389,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/trade.Trade"
+                            "$ref": "#/definitions/trade.SwaggerTrade"
                         }
                     }
                 ],
@@ -513,7 +513,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/trade.Trade"
+                            "$ref": "#/definitions/trade.UpdateTradeInput"
                         }
                     },
                     {
@@ -695,7 +695,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/trade.TypeTrade"
+                            "$ref": "#/definitions/trade.SwaggerTypeTrade"
                         }
                     }
                 ],
@@ -826,7 +826,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/trade.UpdateTradeInput"
+                            "$ref": "#/definitions/trade.TypeTrade"
                         }
                     }
                 ],
@@ -1004,7 +1004,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/trade.User"
+                            "$ref": "#/definitions/trade.SwaggerUserSignUp"
                         }
                     }
                 ],
@@ -1078,13 +1078,10 @@ const docTemplate = `{
                 }
             }
         },
-        "trade.Trade": {
+        "trade.SwaggerTrade": {
             "type": "object",
             "properties": {
                 "amount": {
-                    "type": "integer"
-                },
-                "id": {
                     "type": "integer"
                 },
                 "price": {
@@ -1095,9 +1092,33 @@ const docTemplate = `{
                 },
                 "type_id": {
                     "type": "integer"
+                }
+            }
+        },
+        "trade.SwaggerTypeTrade": {
+            "type": "object",
+            "properties": {
+                "trade_type": {
+                    "type": "string"
+                }
+            }
+        },
+        "trade.SwaggerUserSignUp": {
+            "type": "object",
+            "required": [
+                "name",
+                "password",
+                "username"
+            ],
+            "properties": {
+                "name": {
+                    "type": "string"
                 },
-                "user_id": {
-                    "type": "integer"
+                "password": {
+                    "type": "string"
+                },
+                "username": {
+                    "type": "string"
                 }
             }
         },
@@ -1126,34 +1147,6 @@ const docTemplate = `{
                 },
                 "type_id": {
                     "type": "integer"
-                }
-            }
-        },
-        "trade.User": {
-            "type": "object",
-            "required": [
-                "name",
-                "password",
-                "username"
-            ],
-            "properties": {
-                "_": {
-                    "type": "integer"
-                },
-                "balance": {
-                    "type": "integer"
-                },
-                "is_superuser": {
-                    "type": "string"
-                },
-                "name": {
-                    "type": "string"
-                },
-                "password": {
-                    "type": "string"
-                },
-                "username": {
-                    "type": "string"
                 }
             }
         }

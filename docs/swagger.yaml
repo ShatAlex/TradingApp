@@ -22,11 +22,9 @@ definitions:
     - password
     - username
     type: object
-  trade.Trade:
+  trade.SwaggerTrade:
     properties:
       amount:
-        type: integer
-      id:
         type: integer
       price:
         type: number
@@ -34,8 +32,24 @@ definitions:
         type: string
       type_id:
         type: integer
-      user_id:
-        type: integer
+    type: object
+  trade.SwaggerTypeTrade:
+    properties:
+      trade_type:
+        type: string
+    type: object
+  trade.SwaggerUserSignUp:
+    properties:
+      name:
+        type: string
+      password:
+        type: string
+      username:
+        type: string
+    required:
+    - name
+    - password
+    - username
     type: object
   trade.TypeTrade:
     properties:
@@ -54,25 +68,6 @@ definitions:
         type: string
       type_id:
         type: integer
-    type: object
-  trade.User:
-    properties:
-      _:
-        type: integer
-      balance:
-        type: integer
-      is_superuser:
-        type: string
-      name:
-        type: string
-      password:
-        type: string
-      username:
-        type: string
-    required:
-    - name
-    - password
-    - username
     type: object
 host: localhost:8000
 info:
@@ -156,7 +151,7 @@ paths:
       summary: Buy ticker
       tags:
       - Portfolio
-  /api/v1/portfolio/detail{ticker}:
+  /api/v1/portfolio/detail/{ticker}:
     get:
       consumes:
       - application/json
@@ -316,7 +311,7 @@ paths:
         name: input
         required: true
         schema:
-          $ref: '#/definitions/trade.Trade'
+          $ref: '#/definitions/trade.SwaggerTrade'
       produces:
       - application/json
       responses:
@@ -435,7 +430,7 @@ paths:
         name: input
         required: true
         schema:
-          $ref: '#/definitions/trade.Trade'
+          $ref: '#/definitions/trade.UpdateTradeInput'
       - description: Trade ID
         in: path
         name: id
@@ -514,7 +509,7 @@ paths:
         name: input
         required: true
         schema:
-          $ref: '#/definitions/trade.TypeTrade'
+          $ref: '#/definitions/trade.SwaggerTypeTrade'
       produces:
       - application/json
       responses:
@@ -638,7 +633,7 @@ paths:
         name: input
         required: true
         schema:
-          $ref: '#/definitions/trade.UpdateTradeInput'
+          $ref: '#/definitions/trade.TypeTrade'
       produces:
       - application/json
       responses:
@@ -718,7 +713,7 @@ paths:
         name: input
         required: true
         schema:
-          $ref: '#/definitions/trade.User'
+          $ref: '#/definitions/trade.SwaggerUserSignUp'
       produces:
       - application/json
       responses:

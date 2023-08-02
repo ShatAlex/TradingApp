@@ -33,3 +33,14 @@ func (i UpdateTradeInput) Validate() error {
 type PolygonInput struct {
 	Ticker *string `json:"ticker"`
 }
+
+type SwaggerTrade struct {
+	Ticker string  `json:"ticker" db:"ticker"`
+	TypeId int     `json:"type_id" db:"type_id"`
+	Price  float64 `json:"price" db:"price"`
+	Amount int     `json:"amount" db:"amount"`
+}
+
+type SwaggerTypeTrade struct {
+	Trade_type string `json:"trade_type"`
+}

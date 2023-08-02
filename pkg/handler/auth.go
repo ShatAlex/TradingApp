@@ -13,7 +13,7 @@ import (
 // @ID sign-up
 // @Accept json
 // @Produce json
-// @Param input body trade.User true "account fields"
+// @Param input body trade.SwaggerUserSignUp true "account fields"
 // @Success 200 {integer} integer 1
 // @Failure 400,404 {object} errorResponse
 // @Failure 500 {object} errorResponse

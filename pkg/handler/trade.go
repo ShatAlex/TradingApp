@@ -15,7 +15,7 @@ import (
 // @ID create-trade
 // @Accept  json
 // @Produce  json
-// @Param input body trade.Trade true "trade fields"
+// @Param input body trade.SwaggerTrade true "trade fields"
 // @Success 200 {integer} integer 1
 // @Failure 400,404 {object} errorResponse
 // @Failure 500 {object} errorResponse
@@ -121,7 +121,7 @@ func (h *Handler) getTradeById(c *gin.Context) {
 // @ID update-trade
 // @Accept  json
 // @Produce  json
-// @Param input body trade.Trade true "trade fields"
+// @Param input body trade.UpdateTradeInput true "trade fields"
 // @Param id path int true "Trade ID"
 // @Success 200 {integer} integer 1
 // @Failure 400,404 {object} errorResponse

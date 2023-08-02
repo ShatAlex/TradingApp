@@ -143,7 +143,7 @@ func (h *Handler) getPortfolio(c *gin.Context) {
 // @Failure 400,404 {object} errorResponse
 // @Failure 500 {object} errorResponse
 // @Failure default {object} errorResponse
-// @Router /api/v1/portfolio/detail/{ticker} [get]
+// @Router /api/v1/portfolio/detail [get]
 func (h *Handler) getSpecificTicker(c *gin.Context) {
 	userId, err := getUserId(c)
 	if err != nil {

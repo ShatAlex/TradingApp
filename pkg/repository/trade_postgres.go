@@ -41,9 +41,9 @@ func (r *TradePostgres) Create(userId int, trade trade.Trade) (int, error) {
 	}
 
 	createTrade := fmt.Sprintf(`INSERT INTO %s (ticker, user_id, type_id, price, amount) SELECT $1, $2, $3, $4, $5
-								WHERE (SELECT true FROM %s ty WHERE ty.user_id = $6 AND ty.id = $7)
+								WHERE (SELECT true FROM %s ty WHERE ty.id = $6)
 								RETURNING id`, tradesTable, typesTable)
-	row := r.db.QueryRow(createTrade, trade.Ticker, userId, trade.TypeId, trade.Price, trade.Amount, userId, trade.TypeId)
+	row := r.db.QueryRow(createTrade, trade.Ticker, userId, trade.TypeId, trade.Price, trade.Amount, trade.TypeId)
 
 	err := row.Scan(&tradeId)
 	if err != nil {

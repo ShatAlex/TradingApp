@@ -18,7 +18,7 @@ func NewTypeTradePostgres(db *sqlx.DB) *TypeTradePostgres {
 func (r *TypeTradePostgres) Create(input trade.TypeTrade) (int, error) {
 	var typeId int
 
-	createTypeTrade := fmt.Sprintf("INSERT INTO %s trade_type VALUES $2 RETURNING id", typesTable)
+	createTypeTrade := fmt.Sprintf("INSERT INTO %s (trade_type) VALUES ($2) RETURNING id", typesTable)
 	row := r.db.QueryRow(createTypeTrade, input.Trade_type)
 
 	err := row.Scan(&typeId)

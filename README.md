@@ -11,7 +11,7 @@
 ## :sparkles: Project Description
 REST API designed according to the rules of Clean Architecture with JWT-based authentication system.
 
-The project focuses on comfortable tracking of securities trades with the integration of a third-party API (polygon.io) to obtain the current exchange rates.
+The project focuses on comfortable tracking of securities trades with the integration of a third-party API [(polygon.io)](https://github.com/polygon-io) to obtain the current exchange rates.
 ___
 
 ## :clipboard: Usage
@@ -157,5 +157,3 @@ Example Response:
   "total_income": 782.42
 }
 ```
-___
-

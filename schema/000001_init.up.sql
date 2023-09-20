@@ -10,7 +10,7 @@ CREATE TABLE users
 CREATE TABLE types
 (
     id serial not null unique,
-    trade_type varchar(255) unique
+    trade_type varchar(255) not null unique
 );
 
 INSERT INTO types (trade_type) VALUES ('Покупка ценных бумаг');

@@ -4,16 +4,16 @@ import "errors"
 
 type Trade struct {
 	Id     int     `json:"id" db:"id"`
-	Ticker string  `json:"ticker" db:"ticker"`
-	UserId int     `json:"user_id" db:"user_id"`
-	TypeId int     `json:"type_id" db:"type_id"`
+	Ticker string  `json:"ticker" db:"ticker" binding:"required"`
+	UserId int     `json:"user_id" db:"user_id" binding:"required"`
+	TypeId int     `json:"type_id" db:"type_id" binding:"required"`
 	Price  float64 `json:"price" db:"price"`
 	Amount int     `json:"amount" db:"amount"`
 }
 
 type TypeTrade struct {
 	Id         int    `json:"id"`
-	Trade_type string `json:"trade_type"`
+	Trade_type string `json:"trade_type" db:"trade_type" binding:"required"`
 }
 
 type UpdateTradeInput struct {
@@ -31,7 +31,7 @@ func (i UpdateTradeInput) Validate() error {
 }
 
 type PolygonInput struct {
-	Ticker *string `json:"ticker"`
+	Ticker *string `json:"ticker" binding:"required"`
 }
 
 type SwaggerTrade struct {

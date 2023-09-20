@@ -1,7 +1,6 @@
 package repository
 
 import (
-	"errors"
 	"fmt"
 	"strings"
 
@@ -20,25 +19,25 @@ func NewTradePostgres(db *sqlx.DB) *TradePostgres {
 func (r *TradePostgres) Create(userId int, trade trade.Trade) (int, error) {
 
 	var tradeId int
-	var buyId, sellId int
+	// var buyId, sellId int
 
-	select_type := fmt.Sprintf("SELECT id FROM %s WHERE trade_type = 'Покупка ценных бумаг'", typesTable)
-	if err := r.db.Get(&buyId, select_type); err != nil {
-		return 0, err
-	}
+	// select_type := fmt.Sprintf("SELECT id FROM %s WHERE trade_type = 'Покупка ценных бумаг'", typesTable)
+	// if err := r.db.Get(&buyId, select_type); err != nil {
+	// 	return 0, err
+	// }
 
-	select_type = fmt.Sprintf("SELECT id FROM %s WHERE trade_type = 'Продажа ценных бумаг'", typesTable)
-	if err := r.db.Get(&sellId, select_type); err != nil {
-		return 0, err
-	}
+	// select_type = fmt.Sprintf("SELECT id FROM %s WHERE trade_type = 'Продажа ценных бумаг'", typesTable)
+	// if err := r.db.Get(&sellId, select_type); err != nil {
+	// 	return 0, err
+	// }
 
-	if buyId == trade.TypeId {
-		return 0, errors.New("bad request. Try /api/v1/portfolio/buy")
-	}
+	// if buyId == trade.TypeId {
+	// 	return 0, errors.New("bad request. Try /api/v1/portfolio/buy")
+	// }
 
-	if sellId == trade.TypeId {
-		return 0, errors.New("bad request. Try /api/v1/portfolio/sell")
-	}
+	// if sellId == trade.TypeId {
+	// 	return 0, errors.New("bad request. Try /api/v1/portfolio/sell")
+	// }
 
 	createTrade := fmt.Sprintf(`INSERT INTO %s (ticker, user_id, type_id, price, amount) SELECT $1, $2, $3, $4, $5
 								WHERE (SELECT true FROM %s ty WHERE ty.id = $6)
